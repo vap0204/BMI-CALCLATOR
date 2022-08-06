@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+</head>
+<body>
+    <!-- 
+        12.	Да се създаде калориен калкулатор с избор:
+        Пол: Мъж – Жена радио бутон
+        Възраст: Поле
+        Височина – Слайдър от 1 до 200
+        Тегло: Поле
+        Физическа активност: Падащо меню със следните опции: 
+        Работа зад бюро – 1.2
+        Слаба физическа активност - 1.375
+        Умерена физическа активност – 1.55
+        Висока физическа активност – 1.725
+        Физическа работа – 1.9 
+        Формули за калориен миниум: 
+        мъж: 66 + (13.7 * тегло) + (5 * височина) - (6.8 * възраст) 
+        жена: 65.5 + (9.6 * тегло) + (1.8 * височина) - (4.7 * възраст)
+        дневни калории: 
+        активност * изчислената стойност за калориен минимум
+        индекс на телесната маса: 
+        тегло  / (0.01* височина) ^2
+    -->
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mt-5">
+                <label for="">Мъж</label>
+                <input type="radio" name="gender" value="M" />
+                <label for="">Жена</label>
+                <input type="radio" name="gender" value="F" />
+            </div>
+            <div class="col-12 mt-3">
+                <label for="">Възраст</label>
+                <input type="number" class="form-control" name="age" />
+            </div>
+            <div class="col-12 mt-3">
+                <label for="">Височина</label>
+                <input type="range" name="height" min="30" max="240" value="120" >
+                <span id="heightValue">120</span>
+            </div>
+            <div class="col-12 mt-3">
+                <label for="">Тегло</label>
+                <input type="number" class="form-control" name="weight" />
+            </div>
+            <div class="col-12 mt-3">
+                <label for="">Физическа активност</label>
+                <select name="activity" id="" class="form-control">
+                    <option value="">Изберете</option>
+                    <option value="1.2">Работа зад бюро</option>
+                    <option value="1.375">Слаба физическа активност</option>
+                    <option value="1.55">Умерена физическа активност</option>
+                    <option value="1.725">Висока физическа активност</option>
+                    <option value="1.9">Физическа работа</option>
+                </select>
+            </div>
+            <div class="col-12 mt-3" id="result"></div>
+            <div class="col-12 mt-3">
+                <button id="calculate" class="btn btn-primary">Изчисли</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+        $(function(){
+            $('input[name=height]').on('change', function(){
+                $('#heightValue').html(  $(this).val()    );
+            });
+
+            $('#calculate').click(function(){
+                let gender =  $('input[name=gender]:checked').val();
+                let age =  parseInt(  $('input[name=age]').val() );
+                let height = parseInt(  $('input[name=height]').val()  );
+                let weight = parseFloat( $('input[name=weight]').val() );
+                let activity = parseFloat( $('select[name=activity]').val() );
+                
+                if(gender === undefined || !(age> 0)  || !(height > 0) || !(weight > 0) || !(activity > 0) ) {
+                    alert('Моля въведете всички стойности!');
+                    return;
+                }
+
+                let calMin = 0;
+                if(gender == 'M') {
+                    calMin = 66 + (13.7 * weight) + (5 * height) - (6.8 * age);
+                }
+                else {
+                    calMin = 65.5 + (9.6 * weight) + (1.8 * height) - (4.7 * age);
+                }
+                
+                let dailyCalories = activity * calMin;
+                let x = Math.pow((0.01 * height), 2);
+                let weightIndex = weight / x;
+                
+                let html = `<div> Калориен миниум: <b> ${calMin.toFixed(2)} </b> </div>`;
+                html += `<div> Дневни калории: <b> ${dailyCalories.toFixed(2)} </b> </div>`;
+                html += `<div> Индекс на телесната маса: <b> ${weightIndex.toFixed(2)} </b> </div>`;
+                $('#result').html(html);
+            });
+        });
+    </script>
+</body>
+</html>
